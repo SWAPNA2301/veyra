@@ -1,0 +1,42 @@
+# Python caches and local environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+env/
+
+# Packaging and tooling output
+*.egg-info/
+.coverage
+htmlcov/
+dist/
+build/
+
+# Notebook checkpoints and local configuration
+.ipynb_checkpoints/
+.env
+.env.*
+!.env.example
+
+# Raw datasets are local-only and must never be committed.
+data/raw/*
+!data/raw/.gitkeep
+
+# Generated reports and local DuckDB files
+reports/*.html
+reports/*.json
+reports/*.parquet
+*.duckdb
+*.duckdb.wal
+
+# Fitted parameters and category vocabularies remain local.
+models/*
+!models/.gitkeep
+*.joblib
+*.pkl
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/

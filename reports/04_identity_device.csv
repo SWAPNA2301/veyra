@@ -1,0 +1,5 @@
+identity_device_segment,transactions,fraud_transactions,fraud_rate_pct,mean_amount
+No identity record,446307,9345.0,2.0939,151.66
+Identity present; desktop,85165,5554.0,6.5215,92.6
+Identity present; mobile,55645,5657.0,10.1662,69.5
+Identity present; device missing,3423,107.0,3.1259,86.9

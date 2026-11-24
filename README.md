@@ -1,9 +1,8 @@
 # Veyra
 
-Veyra is a production-oriented starting point for fraud-detection data
-science. This repository currently focuses on reliable ingestion and data
-quality checks; model training and a user interface are intentionally out of
-scope.
+Veyra is a production-oriented fraud-detection data science project with
+validated ingestion, chronological holdouts and train-only ML pipelines.
+User interfaces, serving and deployment remain out of scope.
 
 ## Project layout
 
@@ -11,7 +10,8 @@ scope.
 data/raw/       Local input CSVs (ignored by Git)
 notebooks/      Exploratory analysis notebooks
 reports/        Generated data-quality reports
-src/veyra/      Reusable loading and profiling code
+models/         Local fitted pipelines and run metadata (ignored by Git)
+src/veyra/      Reusable ingestion, splitting, preprocessing and training code
 tests/          Automated tests
 ```
 
@@ -142,6 +142,73 @@ rate here is only an integrity statistic. Earlier full-data EDA is descriptive,
 not a training-fitted transformation. Temporal splitting alone does not establish
 that every feature was available at prediction time. No preprocessing or models
 are fitted by the split utility.
+
+## Train-only ML comparison
+
+After installing the dependencies, reuse the existing split audit:
+
+```powershell
+python -m veyra.training --raw-dir data/raw --split-report reports/chronological_split_summary.json --model-dir models --output-dir reports
+```
+
+As above, use `$env:PYTHONPATH = "src"` if the package is not installed editable.
+The [loader](src/veyra/training_data.py) uses the saved train/validation windows;
+it does not recompute splits for model selection. CSVs are scanned with explicit
+schema roles and type inference disabled, but test rows are filtered out before
+materialization. Only train/validation row counts, labels and boundaries are
+checked. The [training API](src/veyra/training.py) accepts no test DataFrame.
+
+The conservative [feature policy](src/veyra/features.py) excludes TransactionID,
+isFraud, absolute TransactionDT, identifier-like card/address codes, anonymous
+C/D/V count/delta/aggregate features with unverified past-only availability, and
+all other columns outside a static allowlist. It retains transaction amount,
+distance, product, card type/network, email-domain, match and device attributes.
+The device OS/browser/screen attributes id_30/id_31/id_33 are not row IDs. This
+baseline intentionally does not use all competition features; further feature
+inclusion requires checking prediction-time availability, not inspecting test scores.
+
+Both models share preprocessing fitted **only on train**: median imputation
+with missing indicators and a zero fallback for all-empty numeric fields,
+numeric scaling, categorical missing tokens, and sparse rare-category one-hot
+encoding. Vocabulary/frequency grouping is train-derived, capped at 64 columns
+per categorical feature, with a minimum count of 20. Unknown values go to the
+rare bucket when it exists, otherwise all-zero encoding. No target encoding,
+resampling or full-data feature selection is performed. Matrices are float32 CSR.
+
+- Logistic Regression: balanced weights from training labels, fixed C=1.
+- LightGBM: training negative/positive class ratio, at most 400 boosting rounds,
+  validation-average-precision early stopping with patience 30, four CPU threads.
+- No-skill comparator: constant probabilities equal to the training fraud prior.
+
+Model comparison uses **validation average precision** (reported as PR-AUC),
+ROC-AUC, precision, recall, F1 and confusion matrices. The classification
+threshold is fixed at 0.5 for all models, without threshold search; weighted
+outputs are not calibrated fraud probabilities. Validation metrics are
+unweighted. The best of the two learned models is named by validation AP;
+there is no train+validation refit, test evaluation, UI or deployment. The
+[full-data weekly outcome analysis](reports/03_time_trends.sql) is descriptive
+and is never used as a training feature.
+
+Outputs:
+
+- [Validation comparison](reports/training_summary.md), [metrics CSV](reports/training_metrics.csv),
+  and [full metrics/config/provenance](reports/training_metrics.json).
+- A unique run directory under [models/](models/) with three complete fitted
+  preprocessing/classifier pipelines, SHA-256 checksums and a metrics snapshot.
+  Serialization is checked against validation predictions. The folder and
+  joblib files are Git-ignored; raw datasets stay local and unchanged.
+
+To reuse a trusted local pipeline (use the artifact path in the metrics):
+
+```python
+import joblib
+
+pipeline = joblib.load("models/<run-id>/lightgbm.joblib")
+probabilities = pipeline.predict_proba(new_transactions)[:, 1]
+```
+
+Use the recorded package versions and this source package. Do not load untrusted
+joblib artifacts. The existing EDA and split commands remain available unchanged.
 
 ## Tests
 

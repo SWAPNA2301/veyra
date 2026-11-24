@@ -210,6 +210,52 @@ probabilities = pipeline.predict_proba(new_transactions)[:, 1]
 Use the recorded package versions and this source package. Do not load untrusted
 joblib artifacts. The existing EDA and split commands remain available unchanged.
 
+## Validation-only threshold optimization
+
+Reuse the saved LightGBM pipeline without retraining or changing its default
+decision rule:
+
+```powershell
+python -m veyra.thresholding --raw-dir data/raw --split-report reports/chronological_split_summary.json --training-metrics reports/training_metrics.json --output-dir reports --min-recall 0.70
+```
+
+Use the same editable-install or `PYTHONPATH` setup as above. The
+[threshold utility](src/veyra/thresholding.py) verifies the saved model checksum
+and frozen split fingerprint, reuses the existing development loader unchanged,
+discards its training frame, and calls only `predict_proba` on validation. Shared
+CSV scans filter test rows before materialization. The 0.5 baseline must reproduce
+the saved validation metrics before optimization can proceed. No preprocessing,
+calibration or model is fitted; no test frame is created or scored.
+
+The exact O(n log n) sweep evaluates all distinct validation scores plus 0, 0.5,
+1 and a predict-none sentinel just above the maximum score. The prediction rule
+is `score >= threshold`; tied scores stay together, and no-alert precision is
+zero. It compares baseline 0.5 with maximum F1 and maximum precision subject to
+recall >= 0.70. Ties prefer higher recall, then higher precision for max-F1,
+then higher threshold. The recall constraint is never relaxed.
+
+Outputs under [reports/](reports/):
+
+- [Comparison and methodology](reports/threshold_optimization.md).
+- [Every threshold's aggregate metrics](reports/threshold_metrics.csv),
+  [selected operating points](reports/threshold_comparison.csv), and
+  [exact thresholds/provenance](reports/threshold_optimization.json).
+- [Metric-vs-threshold chart](reports/threshold_metrics.png),
+  [precision-recall chart](reports/threshold_precision_recall.png), and
+  [confusion matrices](reports/threshold_confusion_matrices.png).
+
+Only aggregate counts and metrics are exported, not raw transactions, identifiers
+or per-row predictions. Thresholds remain analysis outputs: existing training,
+model files and prediction defaults are unchanged. JSON retains full-precision
+thresholds; use those values rather than the report's rounded display values
+when reproducing a decision. A predict-none sentinel can exceed 1 by one
+floating-point step if any saved score equals 1.
+
+The same validation data previously selected the model/early-stopping iteration
+and now selects thresholds. These are development estimates, not unbiased test
+results or a guarantee of recall on future data. No threshold is automatically
+deployed or set as a default.
+
 ## Tests
 
 ```powershell

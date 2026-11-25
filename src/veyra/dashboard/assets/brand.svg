@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="224" height="56" viewBox="0 0 224 56">
+ <rect x="1" y="7" width="42" height="42" rx="12" fill="#53deb5"/>
+ <path d="M11 18h8l6 16 6-16h7L26 42h-5z" fill="#08251e"/>
+ <text x="57" y="40" fill="#e9f0f2" font-family="Segoe UI,Arial,sans-serif" font-size="37" font-weight="700" letter-spacing="-1.5">veyra<tspan fill="#53deb5">.</tspan></text>
+</svg>

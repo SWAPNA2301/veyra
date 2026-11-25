@@ -40,3 +40,8 @@ models/*
 .DS_Store
 Thumbs.db
 .vscode/
+
+# Local frontend dependencies and build caches
+node_modules/
+*.tsbuildinfo
+frontend/.vite/

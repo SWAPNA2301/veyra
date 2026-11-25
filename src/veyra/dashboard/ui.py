@@ -39,6 +39,14 @@ def panel(title: str, caption: str):
     st.html(f'<div class="panel-title">{escape(title)}</div><div class="panel-caption">{escape(caption)}</div>')
 
 
+def feature_ranking(items):
+    """Readable rows for the existing, already-ranked SHAP summary."""
+    st.html(''.join(f'<div class="feature-row"><span class="feature-rank">{index:02d}</span>'
+                    f'<span class="feature-name">{escape(str(name))}</span>'
+                    f'<span class="feature-value">{escape(value)}</span></div>'
+                    for index, (name, value) in enumerate(items, start=1)))
+
+
 def insight(title: str, text: str, *, amber: bool = False):
     st.html(f'<div class="insight {"amber" if amber else ""}"><strong>{escape(title)}</strong><br>{escape(text)}</div>')
 

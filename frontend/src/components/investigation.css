@@ -1,0 +1,43 @@
+.investigation-drawer { box-sizing: border-box; position: fixed; inset: 0 0 0 auto; margin: 0; padding: 0; width: min(740px, 100%); max-width: 100%; height: 100dvh; max-height: 100dvh; border: 0; border-left: 1px solid #3c4c60; border-radius: 0; background: #101925; color: #dce6f5; box-shadow: -25px 0 90px #0007; overflow-y: auto; }
+.investigation-drawer::backdrop { background: #030811bd; backdrop-filter: blur(4px); }
+.investigation-header { position: sticky; top: 0; z-index: 2; display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; padding: 25px 26px 22px; border-bottom: 1px solid #2b3a4c; background: #121d2bf5; }
+.investigation-header .heading-eyebrow { display: flex; align-items: center; gap: 8px; font-size: 10px; }
+.investigation-header h2 { margin: 10px 0 6px; font-size: 25px; letter-spacing: -.7px; font-weight: 550; }
+.investigation-header p { color: #a4b6cc; font-size: 11px; }
+.investigation-header .icon-button { flex-shrink: 0; }
+.investigation-body { display: grid; gap: 20px; padding: 24px 26px 30px; }
+.investigation-score { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; padding: 4px 0 5px; }
+.investigation-score > div:first-child { display: grid; gap: 5px; }
+.investigation-score span { font-size: 11px; color: #b3c6db; }
+.investigation-score strong { font-size: 34px; letter-spacing: -1px; color: #e3f3ed; font-variant-numeric: tabular-nums; font-weight: 500; }
+.investigation-score p { color: #b4c8db; font-size: 11px; margin: 8px 0 4px; }
+.investigation-score b { font-weight: 450; color: #a0ebcd; }
+.investigation-score small { color: #99acc3; font-size: 10px; }
+.investigation-legend { display: flex; gap: 20px; flex-wrap: wrap; font-size: 11px; margin-bottom: 15px; }
+.investigation-legend span { display: flex; align-items: center; gap: 5px; color: #e9c58b; }
+.investigation-legend span + span { color: #90e5c8; }
+.waterfall-scroll { overflow-x: auto; max-width: 100%; margin-bottom: 13px; }
+.shap-waterfall { display: block; width: 100%; min-width: 520px; }
+.investigation-check { display: flex; align-items: flex-start; gap: 8px; font-size: 11px; color: #a5d8c6; line-height: 1.8; margin-top: 16px; border-top: 1px solid #344a49; padding-top: 13px; }
+.investigation-check svg { flex-shrink: 0; margin-top: 3px; }
+.contribution-details { color: #adbed2; font-size: 11px; margin-top: 17px; overflow-x: auto; }
+.contribution-details summary { color: #cbd9e9; cursor: pointer; }
+.contribution-details p { line-height: 1.8; margin: 12px 0; }
+.contribution-details table { min-width: 420px; }
+.contribution-details td, .contribution-details th { font-size: 11px; padding: 9px 5px; }
+.investigation-inputs { margin-top: 15px; }
+.investigation-inputs > div { display: grid; grid-template-columns: minmax(120px, 1fr) minmax(0, 1.6fr); gap: 15px; padding: 12px 0; border-top: 1px solid #293647; font-size: 12px; }
+.investigation-inputs dt { color: #9fb6d0; overflow-wrap: anywhere; }
+.investigation-inputs dd { color: #d8e8f1; white-space: pre-wrap; overflow-wrap: anywhere; margin: 0; font-variant-numeric: tabular-nums; max-height: 150px; overflow-y: auto; }
+.investigation-retention, .investigation-run { color: #9db1c9; font-size: 11px; line-height: 1.8; overflow-wrap: anywhere; }
+.investigation-loading { min-height: 200px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 12px; color: #b9d9ce; text-align: center; font-size: 13px; }
+.investigation-loading span { font-size: 11px; color: #9dafc6; }
+.investigation-error { padding: 20px 0; font-size: 12px; line-height: 1.8; color: #e6c3a2; }
+.investigation-error h3 { font-size: 14px; color: #f0dac5; }
+.investigation-error p { margin: 8px 0 16px; }
+.batch-investigate-row { cursor: pointer; }
+.batch-investigate-row:hover td { background: #24463744; }
+.batch-row-button { color: #b5e7d5; font: inherit; background: transparent; border: 0; cursor: pointer; padding: 3px 0; text-align: left; }
+.batch-row-button:hover { color: #a3ffda; text-decoration: underline; }
+.batch-row-button:focus-visible { outline: 2px solid #80dcbc; outline-offset: 4px; border-radius: 2px; }
+@media (max-width: 600px) { .investigation-header { padding: 20px 16px; } .investigation-body { padding: 20px 14px; gap: 16px; } .investigation-header h2 { font-size: 23px; } .investigation-inputs > div { grid-template-columns: minmax(100px, 1fr) minmax(0, 1.4fr); gap: 10px; } }

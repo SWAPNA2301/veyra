@@ -5,15 +5,15 @@ import streamlit as st
 
 from .artifacts import nested
 from . import charts
-from .ui import chart, date_label, empty, header, insight, kpis, number, panel
+from .ui import chart, date_label, empty, feature_ranking, header, insight, kpis, number, panel
 
 
 def overview(store):
     quality = store.read("data_quality.json") or {}
     products = store.csv("01_product_risk.csv", ("product", "transactions", "fraud_transactions", "fraud_rate_pct"))
     trends = store.csv("03_time_trends.csv", ("elapsed_week", "transactions", "fraud_transactions", "fraud_rate_pct"))
-    header("Portfolio intelligence", "Your fraud landscape, in focus.",
-           "A clear view of observed transactions, changing fraud patterns, and where risk concentrates. Historical data, not a live feed.")
+    header("Portfolio intelligence / Overview", "Fraud intelligence, in focus.",
+           "Transaction patterns, portfolio risk, and data quality in one view. Historical observations, not a live feed.")
     total = nested(quality, "amount", "sum")
     kpis([
         ("Transactions", number(nested(quality, "tables", "transactions", "rows")), "Full IEEE-CIS dataset snapshot"),
@@ -23,15 +23,15 @@ def overview(store):
         ("Identity coverage", number(nested(quality, "join", "identity_coverage_pct"), 2, "%"),
          f"{number(nested(quality, 'join', 'matched_transactions'))} matched records"),
     ])
-    left, right = st.columns([1.9, 1], gap="large")
-    with left, st.container(border=True):
+    left, right = st.columns([1.7, 1], gap="medium")
+    with left, st.container(border=False, key="panel_trends"):
         panel("Fraud over time", "Transaction volume and fraud rate · relative weeks from TransactionDT")
         if trends is not None and not trends.empty:
             chart(charts.fraud_trends(trends), "overview_trends")
             st.caption("First and last bins may be partial weeks. Week numbers are not calendar dates.")
         else:
             empty("Trend report unavailable", "Restore the saved time-trend report to display this chart.")
-    with right, st.container(border=True):
+    with right, st.container(border=False, key="panel_products"):
         panel("Where risk concentrates", "Fraud prevalence by product · all observed transactions")
         if products is not None and not products.empty:
             chart(charts.product_risk(products), "overview_product")
@@ -39,7 +39,7 @@ def overview(store):
             st.caption(f"Product {highest['product']}: {number(highest['transactions'])} transactions support the highest observed rate.")
         else:
             empty("Product report unavailable", "Saved product aggregates will appear here when available.")
-    first, second = st.columns(2, gap="large")
+    first, second = st.columns(2, gap="medium")
     with first:
         if quality.get("status") == "passed":
             insight("Validated foundations", "The saved audit passed its row, schema, label, amount and join-integrity checks.")
@@ -77,7 +77,7 @@ def performance(store):
     holdout = store.read("holdout_evaluation.json")
     threshold = store.read("threshold_optimization.json")
     training = store.read("training_metrics.json")
-    header("Model evaluation", "Performance, beyond accuracy.",
+    header("Portfolio intelligence / Model performance", "Performance, beyond accuracy.",
            "Validation and final holdout results at one frozen operating point. These are saved evaluations, not live reruns.")
     if not holdout or holdout.get("status") != "complete":
         empty("Final holdout report unavailable", "Restore a completed local holdout report. No evaluation will be started by this dashboard.")
@@ -104,11 +104,11 @@ def performance(store):
         cards.append((label, number(selected[key] * (100 if percent else 1), 2 if percent else 4, "%" if percent else ""), detail))
     kpis(cards)
     st.caption(f"LightGBM · frozen threshold {holdout['threshold']:.10f} · {number(selected['rows'])} rows in this view · {date_label(holdout.get('completed_at_utc'))}")
-    left, right = st.columns([1.45, 1], gap="large")
-    with left, st.container(border=True):
+    left, right = st.columns([1.35, 1], gap="medium")
+    with left, st.container(border=False, key="panel_comparison"):
         panel("Validation → final holdout", "The same saved model and exact decision threshold")
         chart(charts.metric_comparison(validation, test), "performance_metrics")
-    with right, st.container(border=True):
+    with right, st.container(border=False, key="panel_confusion"):
         panel("Decisions in context", f"{choice or 'Final holdout'} · actual rows, predicted columns")
         normalize = st.toggle("Normalize by actual class", value=True)
         chart(charts.confusion(selected, normalize), "performance_matrix")
@@ -134,7 +134,7 @@ def performance(store):
 def explainability(store):
     summary = store.read("shap_summary.json") or {}
     importance = store.csv("shap_global_importance.csv", ("feature", "mean_abs_grouped_shap"))
-    header("Explainability", "Understand the signal.",
+    header("Portfolio intelligence / Explainability", "Understand the signal.",
            "Existing SHAP explanations, grouped into original features. Read the model’s associations—not causal effects.")
     kpis([
         ("Validation sample", number(summary.get("sample_rows")), f"Reproducible seed {summary.get('seed', '—')}"),
@@ -148,21 +148,22 @@ def explainability(store):
     ]
     for tab, (_, filename, title, detail) in zip(st.tabs([item[0] for item in specs]), specs):
         with tab:
-            left, right = st.columns([2.4, 1], gap="large")
-            with left, st.container(border=True):
+            left, right = st.columns([2.2, 1], gap="medium")
+            with left, st.container(border=False, key=f"panel_shap_{filename}"):
                 panel(title, "Saved figure · no SHAP computation is run by the dashboard")
                 image = store.bytes(filename)
                 if image is not None:
-                    st.image(image, width="stretch", caption=title)
-                    st.download_button("Download saved figure", image, file_name=filename, mime="image/png", key=f"download_{filename}")
+                    st.image(image, width="stretch")
+                    st.download_button("Download original figure", image, file_name=filename, mime="image/png", key=f"download_{filename}", icon=":material/download:")
                 else:
                     empty("Saved figure unavailable", "Restore this local SHAP image; the dashboard will not recompute it.")
-            with right:
+            with right, st.container(border=False, key=f"panel_guide_{filename}"):
                 panel("How to read this", detail)
                 if importance is not None and not importance.empty:
                     st.markdown("**Strongest global contributions**")
-                    for index, row in importance.head(5).reset_index(drop=True).iterrows():
-                        st.caption(f"{index+1:02d}  ·  {row['feature']}  —  {row['mean_abs_grouped_shap']:.3f}")
+                    feature_ranking([(row['feature'], f"{row['mean_abs_grouped_shap']:.3f}")
+                                     for _, row in importance.head(5).iterrows()])
+                    st.caption("Mean absolute grouped SHAP · raw log-odds")
                 insight("Preserved, not refitted", "These images use the saved pipeline and fitted preprocessing on a validation sample. The dashboard never accesses the raw dataset.")
                 if summary.get("max_additivity_error") is not None:
                     st.caption(f"Saved reconstruction error: {summary['max_additivity_error']:.2e}.")

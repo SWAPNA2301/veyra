@@ -78,13 +78,8 @@ def _load_pipeline(path: str, expected_hash: str, root: str, source_hashes: tupl
     return model
 
 
-def score_manual(values: dict, spec: ModelSpec) -> dict:
-    import pandas as pd
-
-    for name in ("TransactionAmt", "dist1", "dist2"):
-        value = values.get(name)
-        if (name == "TransactionAmt" and value is None) or (value is not None and (not math.isfinite(value) or value < 0)):
-            raise ScoringUnavailable("Enter a finite, nonnegative transaction amount and valid optional distances.")
+def load_fitted_pipeline(spec: ModelSpec):
+    """Shared checksum, source and fitted-schema guards for local inference."""
     status = spec.path.stat()
     source_stamps = tuple((name, (spec.root / "src" / "veyra" / name).stat().st_mtime_ns) for name, _ in spec.source_hashes)
     pipeline = _load_pipeline(str(spec.path), spec.sha256, str(spec.root), spec.source_hashes,
@@ -92,7 +87,18 @@ def score_manual(values: dict, spec: ModelSpec) -> dict:
     fitted = tuple(pipeline.named_steps["preprocess"].named_steps["policy"].selected_columns_)
     if fitted != spec.selected:
         raise ScoringUnavailable("The saved feature manifest and pipeline schema disagree.")
-    row = {name: values.get(name) for name in fitted}
+    return pipeline
+
+
+def score_manual(values: dict, spec: ModelSpec) -> dict:
+    import pandas as pd
+
+    for name in ("TransactionAmt", "dist1", "dist2"):
+        value = values.get(name)
+        if (name == "TransactionAmt" and value is None) or (value is not None and (not math.isfinite(value) or value < 0)):
+            raise ScoringUnavailable("Enter a finite, nonnegative transaction amount and valid optional distances.")
+    pipeline = load_fitted_pipeline(spec)
+    row = {name: values.get(name) for name in spec.selected}
     probability = float(pipeline.predict_proba(pd.DataFrame([row]))[0, 1])
     if not math.isfinite(probability) or not 0 <= probability <= 1:
         raise ScoringUnavailable("The model returned an invalid score.")
@@ -103,7 +109,7 @@ def score_manual(values: dict, spec: ModelSpec) -> dict:
 
 
 def predictor(store):
-    header("Manual inference", "Inspect a transaction.",
+    header("Workspace / Risk predictor", "Inspect a transaction.",
            "Explore one manually entered scenario with the saved LightGBM pipeline. Inputs and results stay in this session; nothing is added to the dataset.",
            badge="LOCAL INFERENCE ONLY")
     try:
@@ -114,11 +120,11 @@ def predictor(store):
         st.warning(unavailable)
     else:
         st.caption(f"Local artifact found · loaded only on submit · frozen threshold {spec.threshold:.10f}")
-    left, right = st.columns([1.8, 1], gap="large")
+    left, right = st.columns([1.6, 1], gap="medium")
     values = {}
     with left:
         with st.form("manual_transaction", border=True):
-            panel("Transaction details", "Amount is required. Leave unknown fields empty; the saved preprocessing handles missing values.")
+            panel("01 / Transaction details", "Amount is required. Leave unknown fields empty; the saved preprocessing handles missing values.")
             c1, c2 = st.columns(2)
             values["TransactionAmt"] = c1.number_input("Transaction amount · recorded units", min_value=0.0, value=None, step=1.0, format="%.3f", placeholder="Enter an amount")
             products = store.csv("01_product_risk.csv", ("product",))
@@ -156,12 +162,14 @@ def predictor(store):
                 st.error(f"Scoring unavailable: {exc}")
             except Exception:
                 st.error("The local model could not score this input. Confirm matching artifacts and installed dependencies; report pages remain available.")
-    with right, st.container(border=True):
-        panel("Risk assessment", "Last submitted scenario · not a verified fraud decision")
+    with right, st.container(border=False, key="panel_risk"):
+        panel("02 / Risk assessment", "Last submitted scenario · not a verified fraud decision")
         result = st.session_state.get("risk_result")
         if (result and spec and result["run_id"] == spec.run_id
                 and result.get("model_sha") == spec.sha256 and result["threshold"] == spec.threshold):
             chart(charts.score_gauge(result["score"], result["threshold"]), "manual_risk_score")
+            st.html(f'<div class="score-scale"><span>0 / Lower score</span>'
+                    f'<span>Cutoff {result["threshold"]:.4f}</span><span>1 / Higher score</span></div>')
             st.caption("Uncalibrated model score · 0–1 scale, not a fraud probability")
             insight("Above frozen threshold · review suggested" if result["above"] else "Below frozen threshold",
                     f"Score {result['score']:.6f} vs threshold {result['threshold']:.6f}. This threshold is fixed; it is not adjusted from manual inputs.", amber=result["above"])

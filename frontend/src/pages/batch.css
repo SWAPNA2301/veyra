@@ -1,0 +1,60 @@
+.batch-topline { display: flex; align-items: center; gap: 13px; color: #99adc4; font-size: 12px; }
+.batch-intake-grid { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); gap: 19px; align-items: start; }
+.batch-dropzone { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border: 1px dashed #42635e; border-radius: 9px; background: radial-gradient(ellipse at 50% 0, #254d4038, transparent 70%), #111a26; padding: 29px 22px 23px; min-height: 250px; transition: background .15s, border-color .15s; }
+.batch-dropzone.is-dragging { border-color: #86f5cf; background: #244c3e66; box-shadow: inset 0 0 0 1px #62e6bf; }
+.batch-dropzone.has-file { border-style: solid; border-color: #3c6658; }
+.batch-upload-icon { width: 52px; height: 52px; display: grid; place-items: center; border: 1px solid #3a6456; border-radius: 14px; color: #82e6c2; background: linear-gradient(140deg, #31584b55, #172b2b); margin-bottom: 17px; box-shadow: 0 0 25px #62e6bf08; }
+.batch-dropzone h3 { font-size: 18px; letter-spacing: -.4px; font-weight: 520; color: #e2edf7; max-width: 100%; overflow-wrap: anywhere; }
+.batch-dropzone p { color: #9db2ca; font-size: 12px; margin: 9px 0 17px; line-height: 1.7; }
+.batch-format { margin-top: 14px; font-size: 11px; color: #94a8be; }
+.batch-action-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 20px; }
+.batch-action-row .button-primary { min-width: 185px; min-height: 40px; }
+.batch-live { color: #9eb2c8; font-size: 11px; line-height: 1.8; margin-top: 14px; min-height: 38px; }
+.batch-feedback { display: flex; align-items: flex-start; gap: 10px; overflow-wrap: anywhere; }
+.batch-feedback > svg { flex-shrink: 0; margin-top: 3px; }
+.batch-feedback strong { display: block; color: #f1d6b6; margin-bottom: 4px; font-weight: 550; }
+.batch-feedback span { display: block; color: #c3ad96; margin-top: 6px; }
+.batch-guidance { display: grid; gap: 14px; }
+.batch-contract { display: flex; gap: 13px; margin: 19px 0; }
+.batch-contract > span { color: #75b29e; font-size: 11px; padding-top: 2px; font-variant-numeric: tabular-nums; }
+.batch-contract strong { color: #ccdeee; font-size: 12px; font-weight: 550; }
+.batch-contract p { margin-top: 5px; color: #9aafc5; font-size: 12px; line-height: 1.7; }
+.batch-contract code, .batch-schema code { color: #b8e4d4; font-size: 11px; }
+.batch-schema { border-top: 1px solid #303c4f; padding-top: 12px; font-size: 11px; color: #9eb3cd; line-height: 1.8; }
+.batch-schema summary { color: #bfd4e7; font-size: 12px; }
+.batch-schema p { margin: 10px 0; }
+.batch-schema > code { display: block; overflow-wrap: anywhere; }
+.batch-policy { display: flex; gap: 11px; border: 1px solid #36544a; background: linear-gradient(110deg, #25423744, #17232e); border-radius: 9px; padding: 17px 18px; }
+.batch-policy > svg { flex-shrink: 0; color: #94d8bd; margin-top: 2px; }
+.batch-policy strong { color: #c8e5d7; font-size: 12px; font-weight: 550; }
+.batch-policy p { color: #adc1bd; font-size: 11px; line-height: 1.8; margin: 7px 0 3px; }
+.batch-policy b { color: #a5edcf; font-weight: 450; font-variant-numeric: tabular-nums; }
+.batch-policy span { color: #95b1ac; font-size: 11px; }
+.batch-kpis .kpi-card { min-height: 127px; }
+.batch-chart { height: 255px; }
+.batch-chart-footer { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; color: #9cb0c8; font-size: 11px; padding: 10px 0 0; }
+.batch-table-toolbar { flex-wrap: wrap; gap: 12px; }
+.batch-table-toolbar .search-field { max-width: 370px; flex: 1; min-width: 180px; }
+.batch-table-toolbar .sort-field { display: flex; align-items: center; gap: 8px; }
+.batch-table { max-height: 590px; }
+.batch-table table { min-width: 450px; }
+.batch-table th { position: sticky; top: 0; background: #17202e; z-index: 1; }
+.batch-table td { padding-block: 13px; }
+.batch-table td:first-child { width: 17%; }
+.batch-row-prefix { color: #7e95af; margin-right: 5px; }
+.batch-score-cell { display: flex; align-items: center; gap: 15px; }
+.batch-score-cell > span:first-child { min-width: 65px; }
+.batch-score-track { display: block; width: 120px; height: 4px; background: #2a3547; border-radius: 3px; overflow: hidden; }
+.batch-score-track i { display: block; height: 100%; border-radius: inherit; }
+.batch-pagination { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; color: #b8cbdf; font-size: 11px; padding: 15px 0 6px; }
+.batch-pagination > div { display: flex; align-items: center; gap: 10px; }
+.batch-pagination .icon-button { border-color: #364358; }
+.batch-table .table-empty { line-height: 1.8; }
+.batch-table .table-empty button { margin-top: 12px; }
+.batch-provenance { display: flex; align-items: center; gap: 7px; border-top: 1px solid #2c3849; padding-top: 13px; margin-top: 13px; color: #8ca8b1; font-size: 11px; overflow-wrap: anywhere; }
+.batch-provenance > svg { flex-shrink: 0; color: #81cdb0; }
+.batch-retention { display: flex; align-items: flex-start; gap: 7px; color: #91a7bf; font-size: 11px; line-height: 1.8; }
+.batch-retention > svg { flex-shrink: 0; margin-top: 4px; }
+@media (max-width: 1150px) { .batch-intake-grid { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); } .batch-action-row { flex-wrap: wrap; } .batch-score-track { width: 85px; } }
+@media (max-width: 990px) { .batch-intake-grid { grid-template-columns: 1fr; } .batch-guidance { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); align-items: start; } }
+@media (max-width: 600px) { .batch-topline { align-items: flex-start; line-height: 1.7; } .batch-topline .badge { flex-shrink: 0; } .batch-guidance { grid-template-columns: 1fr; } .batch-dropzone { padding: 23px 16px; min-height: 245px; } .batch-dropzone h3 { font-size: 17px; } .batch-action-row .button-primary { flex: 1; } .batch-action-row .button-quiet { padding-inline: 4px; } .batch-table-toolbar .search-field { width: 100%; max-width: none; flex-basis: 100%; } .batch-chart { height: 230px; } .batch-score-track { width: 55px; } .batch-pagination { align-items: flex-start; flex-direction: column; } .batch-pagination > div { align-self: flex-end; } }

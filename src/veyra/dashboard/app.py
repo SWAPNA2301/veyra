@@ -37,8 +37,8 @@ def render_app(root: Path):
         "WORKSPACE": [st.Page(predictor_page, title="Risk Predictor", icon=":material/travel_explore:", url_path="predictor")],
     }, expanded=True)
     with st.sidebar:
-        st.html('<div class="sidebar-card"><span class="pill">LOCAL WORKSPACE</span><br><br>'
-                '<b>Evidence, not estimates.</b><br>Saved reports. Frozen model.<br>No live feed or background training.</div>')
+        st.html('<div class="sidebar-card"><span class="pill">LOCAL WORKSPACE</span>'
+                '<b>Historical intelligence</b>Saved reports. Frozen model.<br>No live feed or background training.</div>')
         if st.button("Refresh saved reports", icon=":material/refresh:", width="stretch"):
             st.cache_data.clear()
             st.rerun()

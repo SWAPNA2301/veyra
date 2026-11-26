@@ -64,6 +64,19 @@ class TransactionExplanation(BaseModel):
     score: Annotated[FiniteFloat, Field(strict=True, ge=0, le=1)]
 
 
+class RetrievalQuery(BaseModel):
+    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
+    query: Annotated[str, Field(strict=True, min_length=1, max_length=1000)]
+    top_k: Annotated[int, Field(strict=True, ge=1, le=10)] = 5
+    min_similarity: Annotated[FiniteFloat, Field(strict=True, ge=-1, le=1)] = 0.2
+
+
+class ChatQuery(BaseModel):
+    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
+    message: Annotated[str, Field(strict=True, min_length=1, max_length=600)]
+    history: list[Annotated[str, Field(strict=True, min_length=1, max_length=600)]] = Field(default_factory=list, max_length=4)
+
+
 app = FastAPI(title="Veyra local dashboard", docs_url=None, redoc_url=None, openapi_url=None)
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=["127.0.0.1", "localhost"])
 app.add_middleware(CORSMiddleware, allow_origins=ORIGINS, allow_methods=["GET", "POST"], allow_headers=["Content-Type"])
@@ -74,7 +87,7 @@ async def local_requests(request: Request, call_next):
     if request.method == "POST":
         if request.headers.get("origin") not in (None, *ORIGINS):
             return JSONResponse({"detail": "Only the local dashboard may submit predictions."}, status_code=403)
-        batch = request.url.path.rstrip("/") == "/api/batch-predict"
+        batch = request.url.path.rstrip("/") in {"/api/batch-predict", "/api/drift/compare"}
         media = request.headers.get("content-type", "").split(";")[0].strip().lower()
         if batch and media not in {"multipart/form-data", "text/csv"}:
             return JSONResponse({"detail": "Use multipart/form-data with field 'file', or text/csv."}, status_code=415)
@@ -98,6 +111,10 @@ async def local_requests(request: Request, call_next):
 
 @app.exception_handler(RequestValidationError)
 async def invalid_input(request: Request, exc: RequestValidationError):
+    if request.url.path.rstrip("/") == "/api/copilot/chat":
+        return JSONResponse({"detail": "Send a nonblank message (max 600 characters) and at most four previous questions of up to 600 characters each. No other fields are accepted."}, status_code=422)
+    if request.url.path.rstrip("/") == "/api/copilot/retrieve":
+        return JSONResponse({"detail": "Use a nonblank query (max 1000 characters), top_k integer 1-10, and finite min_similarity between -1 and 1. No extra fields are accepted."}, status_code=422)
     return JSONResponse({"detail": "Use a finite nonnegative amount, optional nonnegative distances, and text categories (max 128 characters). Identifiers, labels, and other fields are not accepted."}, status_code=422)
 
 
@@ -181,6 +198,75 @@ def transaction_explanation(payload: TransactionExplanation):
         raise HTTPException(409, "This row or model no longer matches the batch result. Analyze the batch again before investigating.") from None
     except Exception:
         raise HTTPException(503, "The saved model cannot explain this transaction right now. Check matching local artifacts and dependencies, then retry.") from None
+
+
+@app.get("/api/drift/reference")
+def drift_reference():
+    from .drift import ReferenceUnavailable, load_reference, reference_summary
+    try:
+        profile = load_reference(ROOT)
+        return {"status": "ready", "reference": reference_summary(profile), "features": len(profile["features"])}
+    except ReferenceUnavailable as exc:
+        return {"status": "unavailable", "detail": str(exc)}
+
+
+def _drift_compare(body: bytes, content_type: str):
+    import csv
+    from io import StringIO
+    from .drift import ReferenceUnavailable, compare_rows, load_reference
+    try:
+        payload = csv_payload(body, content_type)
+        rows = validated_rows(payload, ManualTransaction)
+        provided = {name.strip() for name in next(csv.reader(StringIO(payload.decode("utf-8-sig"))))}
+    except InvalidBatch as exc:
+        raise HTTPException(exc.status, str(exc)) from None
+    except Exception:
+        raise HTTPException(400, "The CSV upload could not be read. Check its encoding and format.") from None
+    try:
+        return compare_rows(rows, provided, load_reference(ROOT))
+    except ReferenceUnavailable as exc:
+        raise HTTPException(503, str(exc)) from None
+    except Exception:
+        raise HTTPException(503, "The batch could not be compared with the fixed training reference. No results were saved.") from None
+
+
+@app.post("/api/drift/compare")
+async def drift_compare(request: Request):
+    return await run_in_threadpool(_drift_compare, await request.body(), request.headers.get("content-type", ""))
+
+
+@app.post("/api/copilot/retrieve")
+def copilot_retrieve(payload: RetrievalQuery):
+    from .copilot import CopilotUnavailable, QueryTooLong, retrieve
+    from .copilot_corpus import CorpusUnavailable
+    try:
+        return retrieve(ROOT, payload.query, payload.top_k, payload.min_similarity)
+    except QueryTooLong as exc:
+        raise HTTPException(422, str(exc)) from None
+    except (CopilotUnavailable, CorpusUnavailable) as exc:
+        raise HTTPException(503, str(exc)) from None
+    except Exception:
+        raise HTTPException(503, "Local retrieval unavailable. Check Copilot dependencies, the offline embedding cache and the manually built index. No query or report content was sent to an external service.") from None
+
+
+@app.get("/api/copilot/status")
+def copilot_status():
+    from .copilot_chat import status
+    return status(ROOT)
+
+
+@app.post("/api/copilot/chat")
+def copilot_chat(payload: ChatQuery):
+    from .copilot import QueryTooLong
+    from .copilot_chat import ChatUnavailable, chat
+    try:
+        return chat(ROOT, payload.message, payload.history)
+    except QueryTooLong:
+        raise HTTPException(422, "Please shorten the question to fit the local retrieval token budget.") from None
+    except ChatUnavailable as exc:
+        raise HTTPException(503, str(exc)) from None
+    except Exception:
+        raise HTTPException(503, "Report retrieval unavailable. Check the approved local index and dependencies, then retry. No question or report was sent to a hosted service.") from None
 
 
 # Production build can be served locally by the same process; no workspace files

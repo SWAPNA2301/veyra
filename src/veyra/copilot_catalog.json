@@ -1,0 +1,106 @@
+{
+  "version": 1,
+  "notice": "Explicitly reviewed aggregate reports and methodology sections only. Hashes pin the approved content; changed sources require review and a catalog edit, never automatic discovery. SHAP JSON is field-projected to exclude its local prediction.",
+  "sources": [
+    {
+      "source": "reports/data_quality.md",
+      "sha256": "0dc97a13924732ae6ac3f2cace8ced0b2c2ee641641ea46cd48cc61837980a9a"
+    },
+    {
+      "source": "reports/sql_analyses.md",
+      "sha256": "ae39491afd7a6a0bb0d8fc9b735830304f392d21d8842ce9ebf2ae5f15ab682b"
+    },
+    {
+      "source": "reports/chronological_split_summary.md",
+      "sha256": "daec2cad3b7145f76e3b568e7206bd837b011def241443004380b7c7e49897ca"
+    },
+    {
+      "source": "reports/training_summary.md",
+      "sha256": "0c1730d6233193e713a29bd96b8d166f07115109aa815b17c761459f5e482d6f"
+    },
+    {
+      "source": "reports/threshold_optimization.md",
+      "sha256": "f66e133a096728e1f63d1a8814ef397dd053ddc3497a1b1b89b7607f1502f033"
+    },
+    {
+      "source": "reports/holdout_summary.md",
+      "sha256": "b883410b0d95e0db63761a9fa62445335faca21e242cca317a6706c45c4ed13b"
+    },
+    {
+      "source": "reports/01_product_risk.sql",
+      "sha256": "c4d7e1bd6cbee544e072656f888a36913c2d58e047220993329a3971003149f4"
+    },
+    {
+      "source": "reports/02_amount_bands.sql",
+      "sha256": "e31502a14a23b48344957bb5893bd4a4cf3f6ba8ae115552e87033ec4b22dfb7"
+    },
+    {
+      "source": "reports/03_time_trends.sql",
+      "sha256": "474d9eaf522648f4dcaa2296841c119988389762047f89f8b30949627e93e2d3"
+    },
+    {
+      "source": "reports/04_identity_device.sql",
+      "sha256": "a18c5559aaeef0c9924f6017680da82668871e7bce9ec99cb80480e34eb89bb6"
+    },
+    {
+      "source": "reports/05_email_domains.sql",
+      "sha256": "15d9492a54b808177d5e88b3536318155a5bbabbd136c3b3de05200526b33193"
+    },
+    {
+      "source": "reports/01_product_risk.csv",
+      "sha256": "7d989f0697589cd4c7c136f714b89248cb3a9755b2fd71dc60361837ce74129d"
+    },
+    {
+      "source": "reports/02_amount_bands.csv",
+      "sha256": "63cd2d6d20c168e91bd3840bf3cc6d2d028edc9a4f131be8fd7a3884f908bf7b"
+    },
+    {
+      "source": "reports/03_time_trends.csv",
+      "sha256": "edcd503f86e7d3ce551b014a4f82888b433092ff658893d243723d3917293869"
+    },
+    {
+      "source": "reports/04_identity_device.csv",
+      "sha256": "771ab1dadf79d57ae5a9b9d472b10f5fa4b1bc78e25878c21ba3b1a049f52027"
+    },
+    {
+      "source": "reports/05_email_domains.csv",
+      "sha256": "f600a6c4b3f727636916b51a1f4bbd46d2d43c543b72bc456dd40344c450ac54"
+    },
+    {
+      "source": "reports/missing_values.csv",
+      "sha256": "49b2b3b9016dc98dafca7b95e80ea85ea5eda32304d7ba6089b3e313eb43edd6"
+    },
+    {
+      "source": "reports/chronological_split_summary.csv",
+      "sha256": "6662d71bd1e5e2b6f413b6d2230b1c91a0222db601ce8b4beed6c844caa0e074"
+    },
+    {
+      "source": "reports/training_metrics.csv",
+      "sha256": "9702421a09875449968b2191ba71e4031e635add14354cd24bc006adeca8c8ec"
+    },
+    {
+      "source": "reports/threshold_comparison.csv",
+      "sha256": "7a1f3ed487923a53b4b2088d68692734acda74dc11133dae7837b2537788c807"
+    },
+    {
+      "source": "reports/holdout_comparison.csv",
+      "sha256": "350d4af3a4d4bf6fdeefb253b242b4f9e9b944e808cccdd6dfaf88fddceb56dc"
+    },
+    {
+      "source": "reports/shap_global_importance.csv",
+      "sha256": "c5cd332752850652b0cdcbec342764ec541b2ae8f1f4e7c5551f021dc796bf91"
+    },
+    {
+      "source": "reports/threshold_optimization.json",
+      "sha256": "db77a445e2b3a9f9b7ec5c70da3ac2d0daa028a5033c3f2e1ef13b9f4edfb72d"
+    },
+    {
+      "source": "reports/holdout_evaluation.json",
+      "sha256": "748cf17d024c4fd110b9275427f4ea3688a2d5d7b8a1b6b41367da5a04165e88"
+    },
+    {
+      "source": "reports/shap_summary.json",
+      "sha256": "4ead77fad34f261220dea125daa0b74a2a7b2f3f7381c9d2a2b3722fc1df39fa"
+    }
+  ]
+}

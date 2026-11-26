@@ -1,4 +1,4 @@
-export type Page = 'overview' | 'performance' | 'explainability' | 'predictor' | 'batch'
+export type Page = 'overview' | 'performance' | 'explainability' | 'predictor' | 'batch' | 'monitoring'
 export interface Product {
   product: string
   transactions: number

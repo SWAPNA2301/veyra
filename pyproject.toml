@@ -27,12 +27,13 @@ dependencies = [
 
 [project.optional-dependencies]
 test = ["pytest>=8,<10"]
+copilot = ["sentence-transformers>=5.2,<6", "chromadb>=1.5,<2"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-veyra = ["sql/*.sql", "dashboard/theme.css", "dashboard/assets/*.svg"]
+veyra = ["sql/*.sql", "dashboard/theme.css", "dashboard/assets/*.svg", "copilot_catalog.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

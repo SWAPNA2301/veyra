@@ -45,3 +45,6 @@ Thumbs.db
 node_modules/
 *.tsbuildinfo
 frontend/.vite/
+
+# Local Copilot embedding cache and aggregate-only vector index.
+.veyra/copilot/

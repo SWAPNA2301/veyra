@@ -13,6 +13,11 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 from starlette.concurrency import run_in_threadpool
 
+# Plotly/Streamlit and the retrieval stack both import Narwhals lazily. Initialize
+# its version modules on the main thread to avoid a cold-start import-lock race
+# when the dashboard and the first Copilot request arrive concurrently.
+import narwhals.stable.v1  # noqa: F401
+
 from .api_reports import IMAGES, ReportStore, dashboard, precision_recall, shap_manifest
 from .batch_prediction import MAX_REQUEST_BYTES, InvalidBatch, csv_payload, score_rows, validated_rows
 

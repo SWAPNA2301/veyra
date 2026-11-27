@@ -1,0 +1,80 @@
+.copilot-page { gap: 20px; }
+.copilot-status-strip { display: flex; align-items: center; flex-wrap: wrap; gap: 15px; padding: 18px 20px; border: 1px solid #36564f; border-radius: 10px; background: radial-gradient(ellipse at 10% 0, #317a6225, transparent 70%), #15232b; }
+.copilot-symbol { display: grid; place-items: center; width: 43px; height: 43px; flex-shrink: 0; border: 1px solid #42685a; border-radius: 12px; color: #9ce9ce; background: #29564745; }
+.copilot-status-copy { flex: 1; min-width: 200px; }
+.copilot-status-copy strong { color: #d9eee5; font-size: 14px; font-weight: 550; }
+.copilot-status-copy p { color: #a4c0b8; font-size: 11px; line-height: 1.7; margin-top: 5px; }
+.copilot-badges { display: flex; flex-wrap: wrap; gap: 8px; min-width: 0; }
+.copilot-badges .badge { white-space: normal; overflow-wrap: anywhere; }
+.copilot-layout { display: grid; grid-template-columns: minmax(0, 1fr) 285px; align-items: start; gap: 20px; }
+.copilot-chat { padding: 0; overflow: hidden; }
+.copilot-chat > .panel-heading { margin: 0; padding: 18px 22px; align-items: center; border-bottom: 1px solid #2b3545; }
+.copilot-empty { padding: 34px 28px 24px; max-width: 700px; margin: auto; }
+.copilot-empty-mark { width: 57px; height: 57px; display: grid; place-items: center; border: 1px solid #41665a; border-radius: 17px; background: linear-gradient(145deg, #25483e, #1a2c32); color: #8fe9ca; margin-bottom: 23px; }
+.copilot-eyebrow { font-size: 10px; color: #8bcdb8; letter-spacing: 1.7px; }
+.copilot-empty h2 { font-size: clamp(22px, 2.3vw, 29px); font-weight: 500; letter-spacing: -.8px; margin: 9px 0 12px; }
+.copilot-empty > p { color: #a7b7cc; font-size: 13px; line-height: 1.9; max-width: 540px; }
+.copilot-suggestions { display: grid; gap: 9px; margin: 24px 0 14px; }
+.copilot-suggestions button { display: flex; align-items: center; justify-content: space-between; gap: 18px; width: 100%; padding: 14px 16px; border: 1px solid #344354; border-radius: 8px; text-align: left; background: #1a2735; color: #96d9c4; }
+.copilot-suggestions button:hover { border-color: #609b86; background: #21372f; }
+.copilot-suggestions button > span { min-width: 0; }
+.copilot-suggestions strong { display: block; color: #d8e8e2; font-size: 12px; font-weight: 550; margin-bottom: 5px; }
+.copilot-suggestions button span span { display: block; font-size: 11px; color: #a8bace; line-height: 1.7; }
+.copilot-suggestions svg { flex-shrink: 0; }
+.copilot-empty .copilot-empty-hint { font-size: 11px; color: #93a5bd; }
+.copilot-transcript { max-height: 660px; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
+.copilot-transcript:focus-visible { outline: 2px solid #62e6bf; outline-offset: -3px; }
+.copilot-turn { padding: 24px 22px; border-bottom: 1px solid #2b3545; }
+.copilot-turn:last-child { border-bottom: 0; }
+.copilot-question { padding: 15px 17px; background: #233d354d; border: 1px solid #38564b; border-radius: 9px; margin-bottom: 22px; }
+.copilot-speaker { display: flex; gap: 8px; align-items: center; font-size: 10px; letter-spacing: 1.2px; color: #9bdac6; font-weight: 600; margin-bottom: 10px; }
+.copilot-speaker > span { margin-left: auto; color: #9cb9b1; font-variant-numeric: tabular-nums; }
+.copilot-plain { white-space: pre-wrap; overflow-wrap: anywhere; }
+.copilot-question p, .copilot-answer-text { color: #dce7f2; font-size: 13px; line-height: 1.9; margin: 0; }
+.copilot-answer-meta { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 13px 0; }
+.copilot-answer-meta > span:last-child { color: #9cacc1; font-size: 10px; overflow-wrap: anywhere; }
+.copilot-notice { border-left: 2px solid #526b79; padding-left: 12px; margin: 16px 0 0; color: #aebed1; font-size: 11px; line-height: 1.8; }
+.copilot-pending { display: flex; align-items: flex-start; gap: 12px; padding: 8px 0; color: #91dcc4; }
+.copilot-pending > svg { flex-shrink: 0; margin-top: 3px; }
+.copilot-pending strong { font-size: 12px; font-weight: 500; }
+.copilot-pending p { margin-top: 6px; color: #a5b6ca; font-size: 12px; line-height: 1.8; }
+.copilot-sources { margin-top: 23px; }
+.copilot-sources h3 { display: flex; align-items: center; gap: 7px; font-size: 11px; color: #c4d5e4; font-weight: 500; margin: 0 0 10px; }
+.copilot-sources h3 span { margin-left: auto; font-size: 10px; color: #96a9bf; }
+.copilot-source { margin-top: 7px; border: 1px solid #354358; border-radius: 7px; background: #111c2a; }
+.copilot-source summary { display: flex; gap: 10px; align-items: flex-start; padding: 12px; cursor: pointer; list-style: none; }
+.copilot-source summary::-webkit-details-marker { display: none; }
+.copilot-source summary:hover { background: #203349; border-radius: 7px; }
+.copilot-citation { color: #9ae4cc; font-size: 12px; font-variant-numeric: tabular-nums; flex-shrink: 0; }
+.copilot-source summary > span:nth-child(2) { min-width: 0; overflow-wrap: anywhere; }
+.copilot-source summary strong { display: block; color: #c5d7e9; font-size: 11px; font-weight: 500; }
+.copilot-source summary span span { display: block; color: #9aafc7; font-size: 10px; margin-top: 5px; line-height: 1.7; }
+.copilot-source-open { color: #a0cfbe; font-size: 10px; white-space: nowrap; margin-left: auto; }
+.copilot-source-open::before { content: '+ '; }
+.copilot-source[open] .copilot-source-open::before { content: '− '; }
+.copilot-source-body { padding: 14px; border-top: 1px solid #354358; }
+.copilot-source-body > p { font-size: 12px; line-height: 1.9; color: #c5d3e3; }
+.copilot-source dl { border-top: 1px solid #2c3b4d; padding-top: 10px; margin-top: 14px; font-size: 10px; line-height: 1.8; }
+.copilot-source dl div { display: flex; gap: 12px; margin-top: 4px; }
+.copilot-source dt { color: #9aafc7; min-width: 56px; }
+.copilot-source dd { color: #c4d4e6; margin: 0; overflow-wrap: anywhere; }
+.copilot-failure p { font-size: 12px; line-height: 1.8; color: #e3c99c; margin: 0 0 12px; }
+.copilot-composer { border-top: 1px solid #354254; padding: 20px 22px; background: #111b28; }
+.copilot-composer label { display: block; font-size: 12px; color: #cbd9e9; font-weight: 500; margin-bottom: 10px; }
+.copilot-composer textarea { display: block; width: 100%; min-height: 94px; max-height: 240px; resize: vertical; padding: 13px 14px; background: #0d1521; color: #e4edf7; border: 1px solid #45576c; border-radius: 8px; font: inherit; font-size: 13px; line-height: 1.8; }
+.copilot-composer textarea::placeholder { color: #8b9bb2; }
+.copilot-composer textarea:focus-visible { outline: 2px solid #62e6bf; outline-offset: 3px; }
+.copilot-composer textarea:disabled { opacity: .55; }
+.copilot-composer-footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 13px; }
+.copilot-composer-footer p { color: #9bacc3; font-size: 10px; line-height: 1.9; margin: 0; }
+.copilot-composer-note { color: #a4b5c9; font-size: 11px; line-height: 1.8; margin-top: 13px; }
+.copilot-guide-item { display: flex; align-items: flex-start; gap: 11px; margin-top: 23px; }
+.copilot-guide-item > svg { color: #8dcbb6; flex-shrink: 0; margin-top: 2px; }
+.copilot-guide-item h3, .copilot-privacy h3 { font-size: 12px; font-weight: 550; color: #cfdde9; margin: 0 0 7px; }
+.copilot-guide-item p, .copilot-privacy p { font-size: 11px; color: #a6b7cd; line-height: 1.9; margin: 0; }
+.copilot-privacy { padding: 23px 17px; }
+.copilot-privacy > svg { color: #8cb9ab; margin-bottom: 12px; }
+.copilot-privacy p + p { margin-top: 12px; }
+@media (max-width: 1200px) { .copilot-layout { grid-template-columns: minmax(0, 1fr); } .copilot-guidance { display: grid; grid-template-columns: 1.4fr 1fr; gap: 15px; } }
+@media (max-width: 650px) { .copilot-status-strip { padding: 16px; gap: 12px; } .copilot-status-copy { min-width: 160px; } .copilot-badges { width: 100%; } .copilot-guidance { grid-template-columns: 1fr; } .copilot-empty { padding: 24px 17px; } .copilot-turn, .copilot-composer { padding: 18px 15px; } .copilot-chat > .panel-heading { padding: 15px; } .copilot-source-open { font-size: 0; } .copilot-source-open::before { font-size: 14px; } .copilot-transcript { max-height: 60vh; } }
+@media (prefers-reduced-motion: reduce) { .copilot-page .animate-spin { animation: none; } }

@@ -1,4 +1,26 @@
-export type Page = 'overview' | 'performance' | 'explainability' | 'predictor' | 'batch' | 'monitoring'
+export type Page = 'overview' | 'performance' | 'explainability' | 'predictor' | 'batch' | 'monitoring' | 'copilot'
+
+export interface CopilotStatus {
+  status: 'ready' | 'setup_required'
+  model: string
+  provider: 'Ollama (local)'
+  index_ready: boolean
+  model_ready: boolean
+  detail: string
+}
+export interface CopilotSource {
+  id: number
+  passage: string
+  similarity: number | null
+  citation: { source: string; section: string; locator: string; chunk_id: string }
+}
+export interface CopilotAnswer {
+  status: 'answered' | 'insufficient_evidence' | 'evidence_only' | 'welcome'
+  answer: string
+  sources: CopilotSource[]
+  model: string | null
+  notice: string
+}
 export interface Product {
   product: string
   transactions: number
